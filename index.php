@@ -38,7 +38,23 @@ $hotels = [
     ],
 
 ];
+if (isset($_GET['parking']) && !empty($_GET['parking'])) {
 
+    var_dump($_GET);
+    $temp = [];
+
+    foreach ($hotels as $item) {
+        $park = $item['parking'] ? 'yes' : 'no';
+        if ($park == $_GET['parking']) {
+            $temp[] = $item;
+        }
+    }
+    $hotels = $temp;
+    var_dump($hotels);
+}
+if (isset($_GET['vote']) && !empty($_GET['vote'])) {
+    $hotels = array_filter($hotels, fn ($value) => $value['vote'] >= $_GET['vote']);
+}
 ?>
 
 <!DOCTYPE html>
@@ -56,8 +72,55 @@ $hotels = [
 
 </head>
 
-<body>
+<body class="">
+    <form action="index.php" method="GET">
+        <h1 class="text-primary text-uppercase ms-5 fw-bold">Hotels:</h1>
+        <select class="form-control form-control text-center w-25 mt-4 mb-4 ms-5" id="type" name="parking">
+            <option value="" selected>Segli</option>
+            <option value="yes">parking</option>
+            <option value="no">no parking</option>
+        </select>
+        <select class="form-control form-control text-center w-25 mt-4 mb-4 ms-5" name=" vote" id="vote">
+            <option value="" selected>scegli </option>
+            <option value="1">vote 1</option>
+            <option value="2">vote 2</option>
+            <option value="3">vote 3</option>
+            <option value="4">vote 4</option>
+            <option value="5">vote 5</option>
+        </select>
+        <button class="btn btn-primary ms-5 " type="submit">Send</button>
+    </form>
+    <table class='container table table-bordered border-primary table-dark table-striped mt-5 text-uppercase'>
+        <thead>
+            <tr>
+                <th scope='col'>name</th>
+                <th scope='col'>description</th>
+                <th scope='col'>parking</th>
+                <th scope='col'>vote</th>
+                <th scope='col'>distance to center</th>
+            </tr>
+        </thead>
 
+        <?php
+
+        foreach ($hotels as $hotel) {
+
+            $park = $hotel['parking'] ? 'yes' : 'no';
+
+            echo "
+    <tbody>
+    <tr>
+    <td>$hotel[name]</td>
+    <td>$hotel[description]</td>
+    <td>$park</td>
+    <td>$hotel[vote]</td>
+    <td>$hotel[distance_to_center] km</td>
+    </tr>
+    </tbody>
+    ";
+        }
+        ?>
+    </table>
 
 </body>
 
